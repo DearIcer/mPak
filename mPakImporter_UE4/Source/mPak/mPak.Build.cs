@@ -1,28 +1,10 @@
-// Some copyright should be here...
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
-using System.IO;
 
-public class mPakImporter : ModuleRules
+public class mPak : ModuleRules
 {
-    private string ModulePath
-    {
-        get
-        {
-            return ModuleDirectory;
-        }
-    }
-
-    private string ThirdPartyPath
-    {
-        get
-        {
-            return Path.GetFullPath(Path.Combine(ModulePath, "../../ThirdParty"));
-        }
-    }
-
-
-    public mPakImporter(ReadOnlyTargetRules Target) : base(Target)
+	public mPak(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
@@ -52,16 +34,18 @@ public class mPakImporter : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
+				"Projects",
+				"InputCore",
+				"EditorFramework",
+				"UnrealEd",
+				"ToolMenus",
 				"CoreUObject",
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"PakFile",
-      
-
 				// ... add private dependencies that you statically link with here ...	
 			}
-            );
+			);
 		
 		
 		DynamicallyLoadedModuleNames.AddRange(
@@ -70,9 +54,5 @@ public class mPakImporter : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
-
-        PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "include"));
-        PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "lib", "unMPakLib.lib"));
-
-    }
+	}
 }

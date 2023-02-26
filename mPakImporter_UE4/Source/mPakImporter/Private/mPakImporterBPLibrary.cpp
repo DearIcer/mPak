@@ -12,13 +12,13 @@ UmPakImporterBPLibrary::UmPakImporterBPLibrary(const FObjectInitializer& ObjectI
 }
 
 
-AActor* UmPakImporterBPLibrary::MPakImport(const FString& mPakFile,  bool bSpawn, const FTransform& spawnTransform, const UObject* WorldContextObject)
+AActor* UmPakImporterBPLibrary::MPakImport(const FString& mPakFile,  bool bSpawnActor, bool bSpawnAccess, const FTransform& spawnTransform, const UObject* WorldContextObject)
 {
 
 
 
 	std::string cstr(TCHAR_TO_UTF8(*mPakFile));
-   	unMPakLibTool temp;
+	unMPakLibTool temp;
 	bool has = temp.unMpak(cstr);
 
 
@@ -64,7 +64,7 @@ AActor* UmPakImporterBPLibrary::MPakImport(const FString& mPakFile,  bool bSpawn
 	AActor* spawnActor = nullptr;
 
 
-	if (bSpawn)
+	if (bSpawnActor)
 	{
 		UClass* spActor = LoadClass<AActor>(AActor::StaticClass(), TEXT("/Script/Engine.Blueprqint'/Game/makePak/BP_Main.BP_Main_C'"));
 		spawnActor = World->SpawnActor<AActor>(spActor, spawnTransform);
@@ -74,11 +74,13 @@ AActor* UmPakImporterBPLibrary::MPakImport(const FString& mPakFile,  bool bSpawn
 	pak->Release();
 	FPlatformFileManager::Get().SetPlatformFile(OldPlatform);
 
+	if (bSpawnAccess)
+	{
+		FString ContentDir = FPaths::ProjectContentDir().Append(TEXT("MakePak"));
+		IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+		PlatformFile.CreateDirectory(*ContentDir);
+	}
 
-
-	FString ContentDir = FPaths::ProjectContentDir().Append(TEXT("MakePak"));
-	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
-	PlatformFile.CreateDirectory(*ContentDir);
 
 	MyPakPlatformFile->Unmount(*PakPath);
 

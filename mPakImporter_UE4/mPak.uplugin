@@ -2,20 +2,24 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "mPakImporter",
-	"Description": "An importer of mPak file.",
+	"FriendlyName": "mPak",
+	"Description": "Make and importer mPak file",
 	"Category": "Other",
 	"CreatedBy": "hotMonk",
-	"CreatedByURL": "http://inite.cn",
-	"DocsURL": "http://inite.cn",
+	"CreatedByURL": "http://www.inite.cn",
+	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
-	"CanContainContent": true,
+	"CanContainContent": false,
 	"IsBetaVersion": true,
 	"IsExperimentalVersion": false,
 	"Installed": false,
 	"Modules": [
 		{
+			"Name": "mPak",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		},{
 			"Name": "mPakImporter",
 			"Type": "Runtime",
 			"LoadingPhase": "PreLoadingScreen"
