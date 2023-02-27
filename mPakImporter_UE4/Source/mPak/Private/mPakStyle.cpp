@@ -41,7 +41,7 @@ TSharedRef< FSlateStyleSet > FmPakStyle::Create()
 	TSharedRef< FSlateStyleSet > Style = MakeShareable(new FSlateStyleSet("mPakStyle"));
 	Style->SetContentRoot(IPluginManager::Get().FindPlugin("mPak")->GetBaseDir() / TEXT("Resources"));
 
-	Style->Set("mPak.OpenPluginWindow", new IMAGE_BRUSH_SVG(TEXT("mPakLogo"), Icon20x20));
+	Style->Set("mPak.OpenPluginWindow", new IMAGE_BRUSH_SVG(TEXT("mpaklogo"), Icon20x20));
 
 	return Style;
 }
