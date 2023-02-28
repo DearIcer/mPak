@@ -3,6 +3,7 @@
 
 #include "SMakeFileEd.h"
 #include "SlateOptMacros.h"
+#include <Kismet/KismetSystemLibrary.h>
 
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
@@ -11,7 +12,7 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SMakeFileEd::Construct(const FArguments& InArgs)
 {
 
-
+	
 
 	ChildSlot
 		[
@@ -40,7 +41,8 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 			.WidthOverride(300.f)
 		[
 
-			SNew(SEditableTextBox)
+			//SNew(SEditableTextBox)
+			SAssignNew(MakeEditableTextBox,SEditableTextBox)
 			.Text(LOCTEXT("b", "C:/projectname/content/makmpak/"))
 
 		]
@@ -67,7 +69,8 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 						SNew(SBox)
 						.WidthOverride(300.f)
 						[
-							SNew(SEditableTextBox)
+							//SNew(SEditableTextBox)
+							SAssignNew(SaveEditableTextBox, SEditableTextBox)
 							.Text(LOCTEXT("b", "C:/projectname/content/makmpak/"))
 						]
 					]
@@ -85,7 +88,8 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 						SNew(SVerticalBox)
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
+								//SNew(SCheckBox)
+								SAssignNew(WindowsEditorCheckBox,SCheckBox)
 								.IsChecked(true)
 								[
 									SNew(STextBlock)
@@ -95,7 +99,8 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 						
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
+								//SNew(SCheckBox)
+								SAssignNew(WindowsCheckBox, SCheckBox)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
@@ -106,27 +111,41 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 							
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
+								//SNew(SCheckBox)
+								SAssignNew(HololensCheckBox, SCheckBox)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
 									.Text(LOCTEXT("Hololens", "Hololens"))
 								]
 							]
+
+						+ SVerticalBox::Slot()
+							[
+								//SNew(SCheckBox)
+								SAssignNew(AndroidCheckBox, SCheckBox)
+								.IsChecked(false)
+								[
+									SNew(STextBlock)
+									.Text(LOCTEXT("Android", "Android"))
+								]
+							]
 							
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
+								//SNew(SCheckBox)
+								SAssignNew(LinuxCheckBox, SCheckBox)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
 									.Text(LOCTEXT("Linux", "Linux"))
 								]
 							]
-							
+					
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
+								//SNew(SCheckBox)
+								SAssignNew(IOSCheckBox, SCheckBox)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
@@ -140,20 +159,58 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 					.VAlign(VAlign_Bottom)
 					[
 						SNew(SBox)
-						.WidthOverride(300.f)
+						.WidthOverride(270.f)
 						[
-							SNew(SButton)
-							.Text(LOCTEXT("打包", "打包"))
-	 	
-							//.OnClicked_Raw(this, &FmPakModule::ExtractClicked)
-							
-
+						
+							SAssignNew(PackButton,SButton)
+							.Text(LOCTEXT("打包", "打包"))	
+							.OnClicked_Raw(this, &SMakeFileEd::OnClickFun)
+							.HAlign(HAlign_Center)
+							.VAlign(VAlign_Center)
 						]
 					]
 		   		]
-	]
+			]
 		];
 
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
+
+void SMakeFileEd::MakePath()
+{
+
+	UEAccessPath = MakeEditableTextBox->GetText().ToString() + "*";
+	ProjectRoot = "";
+
+}
+
+FString SMakeFileEd::GetMakePath()
+{
+	FString aa = MakeEditableTextBox->GetText().ToString() + "*";
+	return 	aa;
+}
+
+FReply SMakeFileEd::OnClickFun()
+{
+	//UEAccessPath
+	UEAccessPath = MakeEditableTextBox->GetText().ToString() + "*";
+	
+
+	//ProjectRoot
+	int32 ContentIndex = MakeEditableTextBox->GetText().ToString().Find(TEXT("Content"));
+	ProjectRoot = MakeEditableTextBox->GetText().ToString().Left(ContentIndex - 1);
+	
+
+	//ProjectName
+	ProjectName = UKismetSystemLibrary::GetGameName();
+
+	//Project_uproject
+	Project_uproject = ProjectRoot + "/" + ProjectName  + ".uproject";
+
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, Project_uproject);
+
+	return FReply::Handled();
+}
+
 #undef LOCTEXT_NAMESPACE
