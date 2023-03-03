@@ -13,11 +13,20 @@
 
 
 
- //预打包资产的路径 , 项目root , 项目名 , 项目_uproject
+ //预打包资产的路径 , 项目root , 项目名 , 项目_uproject  ,cook右边的路径
 FString UEAccessPath = "";
 FString ProjectRoot = "";
 FString ProjectName = "";
 FString Project_uproject = "";
+FString PackPieCmd = "";
+FString PackWindowsCmd = "";
+FString CookRight = "";			//\Content\makePak
+
+
+
+//将打包文件临时放在save的沙盒里面
+FString pakTempDir = FPaths::ConvertRelativePathToFull(FPaths::SandboxesDir());
+
 
 
 
@@ -48,9 +57,9 @@ private:
 	TSharedPtr<SCheckBox> IOSCheckBox;
 
 
-	void MakePath();
+	bool MakePathAndCommand();
 
-	FString GetMakePath();
+	void DoPackFun();
 
 
 	FReply OnClickFun();

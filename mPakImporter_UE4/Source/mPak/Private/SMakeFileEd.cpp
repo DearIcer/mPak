@@ -43,7 +43,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 
 			//SNew(SEditableTextBox)
 			SAssignNew(MakeEditableTextBox,SEditableTextBox)
-			.Text(LOCTEXT("b", "C:/projectname/content/makmpak/"))
+			.Text(LOCTEXT("b", "C:/Users/hotPC/Desktop/editP/Content/makePak"))
 
 		]
 		]
@@ -101,7 +101,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 							[
 								//SNew(SCheckBox)
 								SAssignNew(WindowsCheckBox, SCheckBox)
-								.IsChecked(false)
+								.IsChecked(true)
 								[
 									SNew(STextBlock)
 									.Text(LOCTEXT("Windows", "Windows"))
@@ -176,41 +176,86 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
-void SMakeFileEd::MakePath()
+bool SMakeFileEd::MakePathAndCommand()
 {
 
-	UEAccessPath = MakeEditableTextBox->GetText().ToString() + "*";
-	ProjectRoot = "";
-
-}
-
-FString SMakeFileEd::GetMakePath()
-{
-	FString aa = MakeEditableTextBox->GetText().ToString() + "*";
-	return 	aa;
-}
-
-FReply SMakeFileEd::OnClickFun()
-{
 	//UEAccessPath
 	UEAccessPath = MakeEditableTextBox->GetText().ToString() + "*";
-	
+
 
 	//ProjectRoot
 	int32 ContentIndex = MakeEditableTextBox->GetText().ToString().Find(TEXT("Content"));
 	ProjectRoot = MakeEditableTextBox->GetText().ToString().Left(ContentIndex - 1);
-	
+
 
 	//ProjectName
 	ProjectName = UKismetSystemLibrary::GetGameName();
 
 	//Project_uproject
-	Project_uproject = ProjectRoot + "/" + ProjectName  + ".uproject";
+	Project_uproject = ProjectRoot + "/" + ProjectName + ".uproject";
+
+	//CookRight
+	CookRight = MakeEditableTextBox->GetText().ToString().Right(MakeEditableTextBox->GetText().ToString().Len() - ProjectRoot.Len());
 
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, Project_uproject);
+	//打包编辑器命令
+	PackPieCmd = "UnrealPak " + pakTempDir + "/pie.pak " + UEAccessPath;
 
-	return FReply::Handled();
+	//打包Windows包命令
+	PackWindowsCmd = "UnrealPak " + pakTempDir + "/run.pak " + ProjectRoot + "/Saved/Cooked/Windows/" + ProjectName + CookRight + "/*";
+
+
+
+	return true;
+
+}
+
+
+
+void SMakeFileEd::DoPackFun()
+{
+
+
+
+
+	//FText cookWindowsCmd = FText::Format(
+	//	LOCTEXT("cookWindowsCmd", "UnrealEditor-Cmd.exe {0} -run=Cook -TargetPlatform=Windows -CookAll"),
+	//	Project_uproject
+	//	);
+
+
+	FString  str1 = "UnrealEditor-Cmd.exe ";
+	FString  str2 = Project_uproject;
+	FString  str3 = " -run=Cook -TargetPlatform=Windows -CookAll";
+
+	FString cookWindowsCmd = str1 + str2 + str3;
+
+
+
+	char* cookCommand = TCHAR_TO_ANSI(*cookWindowsCmd);
+	char* packPieCommand = TCHAR_TO_ANSI(*PackPieCmd);
+	char* PackWinCommand = TCHAR_TO_ANSI(*PackWindowsCmd);
+	system(cookCommand);
+	system(packPieCommand);
+	system(PackWinCommand);
+
+
+
+}
+
+FReply SMakeFileEd::OnClickFun()
+{
+
+
+	if (MakePathAndCommand())
+	{
+		DoPackFun();
+	}
+	
+
+
+
+  	return FReply::Handled();
 }
 
 #undef LOCTEXT_NAMESPACE
