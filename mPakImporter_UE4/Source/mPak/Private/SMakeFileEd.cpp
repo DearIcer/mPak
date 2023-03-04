@@ -3,6 +3,8 @@
 
 #include "SMakeFileEd.h"
 #include "SlateOptMacros.h"
+#include <Kismet/KismetSystemLibrary.h>
+#include <UATHelper/Public/IUATHelperModule.h>
 
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
@@ -11,7 +13,7 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SMakeFileEd::Construct(const FArguments& InArgs)
 {
 
-
+	
 
 	ChildSlot
 		[
@@ -40,8 +42,9 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 			.WidthOverride(300.f)
 		[
 
-			SNew(SEditableTextBox)
-			.Text(LOCTEXT("b", "C:/projectname/content/makmpak/"))
+			//SNew(SEditableTextBox)
+			SAssignNew(MakeEditableTextBox,SEditableTextBox)
+			.Text(LOCTEXT("b", "C:/Users/hotPC/Desktop/editP/Content/makePak"))
 
 		]
 		]
@@ -67,7 +70,8 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 						SNew(SBox)
 						.WidthOverride(300.f)
 						[
-							SNew(SEditableTextBox)
+							//SNew(SEditableTextBox)
+							SAssignNew(SaveEditableTextBox, SEditableTextBox)
 							.Text(LOCTEXT("b", "C:/projectname/content/makmpak/"))
 						]
 					]
@@ -85,7 +89,8 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 						SNew(SVerticalBox)
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
+								//SNew(SCheckBox)
+								SAssignNew(WindowsEditorCheckBox,SCheckBox)
 								.IsChecked(true)
 								[
 									SNew(STextBlock)
@@ -95,8 +100,9 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 						
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
-								.IsChecked(false)
+								//SNew(SCheckBox)
+								SAssignNew(WindowsCheckBox, SCheckBox)
+								.IsChecked(true)
 								[
 									SNew(STextBlock)
 									.Text(LOCTEXT("Windows", "Windows"))
@@ -106,27 +112,41 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 							
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
+								//SNew(SCheckBox)
+								SAssignNew(HololensCheckBox, SCheckBox)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
 									.Text(LOCTEXT("Hololens", "Hololens"))
 								]
 							]
+
+						+ SVerticalBox::Slot()
+							[
+								//SNew(SCheckBox)
+								SAssignNew(AndroidCheckBox, SCheckBox)
+								.IsChecked(false)
+								[
+									SNew(STextBlock)
+									.Text(LOCTEXT("Android", "Android"))
+								]
+							]
 							
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
+								//SNew(SCheckBox)
+								SAssignNew(LinuxCheckBox, SCheckBox)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
 									.Text(LOCTEXT("Linux", "Linux"))
 								]
 							]
-							
+					
 						+ SVerticalBox::Slot()
 							[
-								SNew(SCheckBox)
+								//SNew(SCheckBox)
+								SAssignNew(IOSCheckBox, SCheckBox)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
@@ -140,20 +160,112 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 					.VAlign(VAlign_Bottom)
 					[
 						SNew(SBox)
-						.WidthOverride(300.f)
+						.WidthOverride(270.f)
 						[
-							SNew(SButton)
-							.Text(LOCTEXT("打包", "打包"))
-	 	
-							//.OnClicked_Raw(this, &FmPakModule::ExtractClicked)
-							
-
+						
+							SAssignNew(PackButton,SButton)
+							.Text(LOCTEXT("打包", "打包"))	
+							.OnClicked_Raw(this, &SMakeFileEd::OnClickFun)
+							.HAlign(HAlign_Center)
+							.VAlign(VAlign_Center)
 						]
 					]
 		   		]
-	]
+			]
 		];
 
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
+
+bool SMakeFileEd::MakePathAndCommand()
+{
+
+	//UEAccessPath
+	UEAccessPath = MakeEditableTextBox->GetText().ToString() + "/*";
+
+
+	//ProjectRoot
+	int32 ContentIndex = MakeEditableTextBox->GetText().ToString().Find(TEXT("Content"));
+	ProjectRoot = MakeEditableTextBox->GetText().ToString().Left(ContentIndex - 1);
+
+
+	//ProjectName
+	ProjectName = UKismetSystemLibrary::GetGameName();
+
+	//Project_uproject
+	Project_uproject = ProjectRoot + "/" + ProjectName + ".uproject";
+
+	//CookRight
+	CookRight = MakeEditableTextBox->GetText().ToString().Right(MakeEditableTextBox->GetText().ToString().Len() - ProjectRoot.Len());
+
+
+	//打包编辑器命令
+	PackPieCmd = "UnrealPak " + pakTempDir + "/pie.pak " + UEAccessPath;
+
+	//打包Windows包命令
+	PackWindowsCmd = "UnrealPak " + pakTempDir + "/run.pak " + ProjectRoot + "/Saved/Cooked/Windows/" + ProjectName + CookRight + "/*";
+
+
+
+	return true;
+
+}
+
+
+
+void SMakeFileEd::DoPackFun()
+{
+
+	//FText cookWindowsCmd = FText::Format(
+	//	LOCTEXT("cookWindowsCmd", "UnrealEditor-Cmd.exe {0} -run=Cook -TargetPlatform=Windows -CookAll"),
+	//	Project_uproject
+	//	);
+
+
+	FString  str1 = "UnrealEditor-Cmd.exe ";
+	FString  str2 = Project_uproject;
+	FString  str3 = " -run=Cook -TargetPlatform=Windows -CookAll";
+
+	FString cookWindowsCmd = str1 + str2 + str3;
+
+
+	char* cookCommand = TCHAR_TO_ANSI(*cookWindowsCmd);
+	char* packPieCommand = TCHAR_TO_ANSI(*PackPieCmd);
+	char* PackWinCommand = TCHAR_TO_ANSI(*PackWindowsCmd);
+
+
+
+	UE_LOG(LogTemp, Warning, TEXT("cookWindowsCmd+++++++++++%s"), *cookWindowsCmd);
+	UE_LOG(LogTemp, Warning, TEXT("PackPieCmd+++++++++++%s"), *PackPieCmd);
+	UE_LOG(LogTemp, Warning, TEXT("PackWindowsCmd+++++++++++%s"), *PackWindowsCmd);
+
+
+	//UnrealEditor-Cmd.exe C:/Users/hotPC/Desktop/editP/editP.uproject -run=Cook -TargetPlatform=Windows -CookAll
+	//UnrealPak C:/Users/hotPC/Desktop/editP/Saved/Sandboxes/pie.pak C:/Users/hotPC/Desktop/editP/Content/makePak/*
+	//UnrealPak C:/Users/hotPC/Desktop/editP/Saved/Sandboxes/run.pak C:/Users/hotPC/Desktop/editP/Saved/Cooked/Windows/editP/Content/makePak/*
+
+
+
+	system(cookCommand);
+	system(packPieCommand);
+	system(PackWinCommand);
+
+
+
+	//IUATHelperModule::Get().CreateUatTask(CommandLine, PlatformDisplayName, TaskName, TaskShortName, TaskIcon, OptionalAnalyticsParamArray, ResultCallback);
+
+}
+
+FReply SMakeFileEd::OnClickFun()
+{
+
+
+	if (MakePathAndCommand())
+	{
+		DoPackFun();
+	}
+
+  	return FReply::Handled();
+}
+
 #undef LOCTEXT_NAMESPACE
