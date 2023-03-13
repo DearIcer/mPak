@@ -4,6 +4,7 @@
 #include "SMakeFileEd.h"
 #include "SlateOptMacros.h"
 #include <Kismet/KismetSystemLibrary.h>
+#include "mPakCore.h"
 #include <UATHelper/Public/IUATHelperModule.h>
 //#include <Windows/LiveCodingServer/Private/External/LC_ImmutableString.h>
 
@@ -194,7 +195,8 @@ bool SMakeFileEd::MakePathAndCommand()
 	ProjectName = UKismetSystemLibrary::GetGameName();
 
 	//Project_uproject
-	Project_uproject = ProjectRoot + "/" + ProjectName + ".uproject";
+	//Project_uproject = ProjectRoot + "/" + ProjectName + ".uproject";
+	Project_uproject = FPaths::ConvertRelativePathToFull(FPaths::GetProjectFilePath());
 
 	//CookRight
 	CookRight = MakeEditableTextBox->GetText().ToString().Right(MakeEditableTextBox->GetText().ToString().Len() - ProjectRoot.Len());
@@ -220,27 +222,33 @@ void SMakeFileEd::DoPackFun()
 
 	FString  str1 = "UnrealEditor-Cmd.exe ";
 	FString  str2 = Project_uproject;
-	FString  str3 = " -run=Cook -TargetPlatform=Windows -CookAll";
+	FString  str3 = " -run=Cook -TargetPlatform=Windows -unversioned -stdout -CrashForUAT -unattended -NoLogTimes -UTF8Output";
+   	FString cookWindowsCmd = str1 + str2 + str3;
 
-	FString cookWindowsCmd = str1 + str2 + str3;
 
 
-	const char* cookCommand = TCHAR_TO_ANSI(*cookWindowsCmd);		//UnrealEditor-Cmd.exe C:/Users/hotPC/Desktop/editP/editP.uproject -run=Cook -TargetPlatform=Windows -CookAll
+	//引擎的转换方法会出问题
+	std::string MyStdString1(TCHAR_TO_UTF8(*cookWindowsCmd));
+	char cookCommand[] = "";
+	MyStdString1.copy(cookCommand, MyStdString1.size(), 0);
+
+
+	//const char* cookCommand = TCHAR_TO_ANSI(*cookWindowsCmd);		//UnrealEditor-Cmd.exe C:/Users/hotPC/Desktop/editP/editP.uproject -run=Cook -TargetPlatform=Windows -CookAll
 	const char* packPieCommand = TCHAR_TO_ANSI(*PackPieCmd);		//UnrealPak C:/Users/hotPC/Desktop/editP/Saved/Sandboxes/pie.pak C:/Users/hotPC/Desktop/editP/Content/makePak/*
 	//const char* PackWinCommand = TCHAR_TO_ANSI(*PackWindowsCmd);	//UnrealPak C:/Users/hotPC/Desktop/editP/Saved/Sandboxes/run.pak C:/Users/hotPC/Desktop/editP/Saved/Cooked/Windows/editP/Content/makePak/*
 	
 
-	
 
 	//引擎的转换方法会出问题
 	std::string MyStdString(TCHAR_TO_UTF8(*PackWindowsCmd));
 	char PackWinCommand[]="";
 	MyStdString.copy(PackWinCommand, MyStdString.size(), 0);
 
+
+
 	//UE_LOG(LogTemp, Warning, TEXT("cookWindowsCmd+++++++++++%s"), *cookWindowsCmd);
 	//UE_LOG(LogTemp, Warning, TEXT("PackPieCmd+++++++++++%s"), *PackPieCmd);
 	//UE_LOG(LogTemp, Warning, TEXT("PackWindowsCmd+++++++++++%s"), *PackWindowsCmd);
-
 
 
 
@@ -249,33 +257,58 @@ void SMakeFileEd::DoPackFun()
 	//system(packPieCommand);		//UnrealPak C:/Users/hotPC/Desktop/editP/Saved/Sandboxes/pie.pak C:/Users/hotPC/Desktop/editP/Content/makePak/*
 	//_sleep(1000);
 	//system(PackWinCommand);		//UnrealPak C:/Users/hotPC/Desktop/editP/Saved/Sandboxes/run.pak C:/Users/hotPC/Desktop/editP/Saved/Cooked/Windows/editP/Content/makePak/*
-	//
-	// CommandLine, PlatformName, LOCTEXT("PackagePluginTaskName", "Packaging Plugin" )
-
-	FString CommandLine = cookWindowsCmd;
 
 
 
 
+//#if PLATFORM_WINDOWS
+//	FText PlatformName = LOCTEXT("PlatformName_Windows", "Windows");
+//#elif PLATFORM_MAC
+//	FText PlatformName = LOCTEXT("PlatformName_Mac", "Mac");
+//#elif PLATFORM_LINUX
+//	FText PlatformName = LOCTEXT("PlatformName_Linux", "Linux");
+//#else
+//	FText PlatformName = LOCTEXT("PlatformName_Other", "Other OS");
+//#endif
 
 
 
-
-
-#if PLATFORM_WINDOWS
-	FText PlatformName = LOCTEXT("PlatformName_Windows", "Windows");
-#elif PLATFORM_MAC
-	FText PlatformName = LOCTEXT("PlatformName_Mac", "Mac");
-#elif PLATFORM_LINUX
-	FText PlatformName = LOCTEXT("PlatformName_Linux", "Linux");
-#else
-	FText PlatformName = LOCTEXT("PlatformName_Other", "Other OS");
-#endif
-
-
-	IUATHelperModule::Get().CreateUatTask(CommandLine, PlatformName, LOCTEXT("PackagePluginTaskName", "Packaging Plugin"),LOCTEXT("PackagePluginTaskShortName", "Package Plugin Task"), FAppStyle::GetBrush(TEXT("MainFrame.CookContent")));
+	//IUATHelperModule::Get().CreateUatTask(CommandLine, PlatformName, LOCTEXT("PackagePluginTaskName", "Packaging Plugin"),LOCTEXT("PackagePluginTaskShortName", "Package mPak file"), FAppStyle::GetBrush(TEXT("MainFrame.CookContent")));
 
 	
+	FString Batpath = FPaths::ConvertRelativePathToFull(FPaths::ProjectPluginsDir());
+	Batpath += "mPakImporter_UE5/ThirdParty/MyCook.bat";
+	
+
+
+
+	FPaths::NormalizeFilename(Batpath);
+	FString Param = TEXT("");
+	FProcHandle Handle = FPlatformProcess::CreateProc(*Batpath, *Param, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
+	FPlatformProcess::WaitForProc(Handle);
+	//启动器是否隐藏
+	//启动器是否真正的隐藏	   3
+	//返回创建进程的ID
+	//优先级默认0
+	//指定工作路径
+	//剩下两个参数是管线相关的内容
+
+
+
+	//FString uPiePath = pakTempDir + "/pie.pak";
+	//FString uRunPath = pakTempDir + "/run.pak";
+	//FString uOutPath = pakTempDir + "/out.mpak";
+
+
+	//std::string piePath(TCHAR_TO_UTF8(*uPiePath));
+	//std::string runPath(TCHAR_TO_UTF8(*uRunPath));
+	//std::string outPath(TCHAR_TO_UTF8(*uOutPath));
+
+
+
+	//unMPakLibTool makePack;
+	//makePack.PackMpak(piePath,runPath,outPath);
+
 
 
 }
