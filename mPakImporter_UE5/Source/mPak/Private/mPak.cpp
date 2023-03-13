@@ -65,7 +65,6 @@ TSharedRef<SDockTab> FmPakModule::OnSpawnPluginTab(const FSpawnTabArgs& SpawnTab
 
 
 
-
 return SNew(SDockTab)
 	.TabRole(ETabRole::NomadTab)
 	[

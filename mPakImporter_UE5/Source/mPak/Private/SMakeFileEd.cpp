@@ -46,7 +46,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 
 			//SNew(SEditableTextBox)
 			SAssignNew(MakeEditableTextBox,SEditableTextBox)
-			.Text(LOCTEXT("b", "C:/Users/hotWin/Desktop/dddd/Content/makePak"))
+			.Text(LOCTEXT("makePakDir", "C:/Users/hotWin/Desktop/dddd/Content/makePak"))
 
 		]
 		]
@@ -74,7 +74,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 						[
 							//SNew(SEditableTextBox)
 							SAssignNew(SaveEditableTextBox, SEditableTextBox)
-							.Text(LOCTEXT("b", "C:/projectname/content/makmpak/"))
+							.Text(LOCTEXT("outFile", "C:/Users/hotWin/Desktop/car.mpak"))
 						]
 					]
 			]
@@ -186,6 +186,9 @@ bool SMakeFileEd::MakePathAndCommand()
 	UEAccessPath = MakeEditableTextBox->GetText().ToString() + "/*";
 
 
+	mPakOutPath = SaveEditableTextBox->GetText().ToString();
+
+
 	//ProjectRoot
 	int32 ContentIndex = MakeEditableTextBox->GetText().ToString().Find(TEXT("Content"));
 	ProjectRoot = MakeEditableTextBox->GetText().ToString().Left(ContentIndex - 1);
@@ -283,7 +286,8 @@ void SMakeFileEd::DoPackFun()
 
 
 	FPaths::NormalizeFilename(Batpath);
-	FString Param = TEXT("");
+	//FString Param = TEXT("");
+	FString Param = mPakOutPath;
 	FProcHandle Handle = FPlatformProcess::CreateProc(*Batpath, *Param, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
 	FPlatformProcess::WaitForProc(Handle);
 	//启动器是否隐藏
