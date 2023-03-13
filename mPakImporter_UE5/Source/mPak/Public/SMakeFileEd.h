@@ -21,6 +21,7 @@ FString Project_uproject = "";
 FString PackPieCmd = "";
 FString PackWindowsCmd = "";
 FString CookRight = "";			//\Content\makePak
+FString mPakOutPath = "";
 
 
 

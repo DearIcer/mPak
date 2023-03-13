@@ -34,5 +34,4 @@ SET PakSourceListFile=C:\Users\hotWin\Desktop\bbbb\Content\makePak\*
 @REM Create mPak file
 SET RunPath="C:\Users\hotWin\Desktop\bbbb\Saved\Sandboxes\run.pak"
 SET PiePath="C:\Users\hotWin\Desktop\bbbb\Saved\Sandboxes\pie.pak"
-SET OutPath="C:\Users\hotWin\Desktop\bbbb\Saved\Sandboxes\out.mpak"
-mPakCore %RunPath% %PiePath% -output=%OutPath%
+mPakCore %RunPath% %PiePath% -output=%1
