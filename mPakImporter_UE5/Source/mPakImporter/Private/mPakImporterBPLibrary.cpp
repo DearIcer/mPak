@@ -24,9 +24,9 @@ AActor* UmPakImporterBPLibrary::MPakImport(const FString& mPakFile,  bool bSpawn
 
 
 #if WITH_EDITOR
-	const FString& PakPath = "C:\\Users\\hotMonk\\Desktop\\tempPak\\pie.pak";
+	const FString& PakPath = "C:\\Users\\hotWin\\Desktop\\bbbb\\Saved\\Sandboxes\\pie.pak";
 #else
-	const FString& PakPath = "C:\\Users\\hotMonk\\Desktop\\tempPak\\run.pak";
+	const FString& PakPath = "C:\\Users\\hotWin\\Desktop\\bbbb\\Saved\\Sandboxes\\run.pak";
 #endif
 	
 
