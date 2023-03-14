@@ -167,7 +167,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 						
 							SAssignNew(PackButton,SButton)
 							.Text(LOCTEXT("打包", "打包"))	
-							.OnClicked_Raw(this, &SMakeFileEd::OnClickFun)
+							.OnClicked_Raw(this, &SMakeFileEd::OnPackButtonClickFun)
 							.HAlign(HAlign_Center)
 							.VAlign(VAlign_Center)
 						]
@@ -185,7 +185,7 @@ bool SMakeFileEd::MakePathAndCommand()
 	//UEAccessPath
 	UEAccessPath = MakeEditableTextBox->GetText().ToString() + "/*";
 
-
+	//mpak file out path
 	mPakOutPath = SaveEditableTextBox->GetText().ToString();
 
 
@@ -280,7 +280,7 @@ void SMakeFileEd::DoPackFun()
 
 	
 	FString Batpath = FPaths::ConvertRelativePathToFull(FPaths::ProjectPluginsDir());
-	Batpath += "mPakImporter_UE5/ThirdParty/MyCook.bat";
+	Batpath += "mPakImporter_UE5/ThirdParty/BuildMPak.bat";
 	
 
 
@@ -288,14 +288,45 @@ void SMakeFileEd::DoPackFun()
 	FPaths::NormalizeFilename(Batpath);
 	//FString Param = TEXT("");
 	FString Param = mPakOutPath;
-	FProcHandle Handle = FPlatformProcess::CreateProc(*Batpath, *Param, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
-	FPlatformProcess::WaitForProc(Handle);
+
+
+
+	//::ProjectName
+	//::TargetPakFile_pie
+	//::TargetPakFile_run
+	//::PakSourceListFile_pie
+	//::PakSourceListFile_run
+	//::mPakOutput
+
+
+	FString TargetPakFile_pie = FString(pakTempDir + "/pie.pak");
+	FString TargetPakFile_run = FString(pakTempDir + "/run.pak");
+	FString PakSourceListFile_pie = FString(pakTempDir + "/run.pak");
+	FString PakSourceListFile_run = FString(ProjectRoot + "/Saved/Cooked/Windows/" + ProjectName + CookRight + "/*");
+
+
+
+
+	FString batParam;
+	batParam += FString::Printf(TEXT(" %s"), *Project_uproject);
+	batParam += FString::Printf(TEXT(" %s"), *TargetPakFile_pie);
+	batParam += FString::Printf(TEXT(" %s"), *TargetPakFile_run);
+	batParam += FString::Printf(TEXT(" %s"), *UEAccessPath);
+	batParam += FString::Printf(TEXT(" %s"), *PakSourceListFile_run);
+	batParam += FString::Printf(TEXT(" %s"), *mPakOutPath);
+
+
+	
+
 	//启动器是否隐藏
 	//启动器是否真正的隐藏	   3
 	//返回创建进程的ID
 	//优先级默认0
 	//指定工作路径
 	//剩下两个参数是管线相关的内容
+	FProcHandle Handle = FPlatformProcess::CreateProc(*Batpath, *batParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
+	FPlatformProcess::WaitForProc(Handle);
+
 
 
 
@@ -317,7 +348,7 @@ void SMakeFileEd::DoPackFun()
 
 }
 
-FReply SMakeFileEd::OnClickFun()
+FReply SMakeFileEd::OnPackButtonClickFun()
 {
 
 
