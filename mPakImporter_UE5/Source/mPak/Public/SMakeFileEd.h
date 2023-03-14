@@ -63,7 +63,7 @@ private:
 	void DoPackFun();
 
 
-	FReply OnClickFun();
+	FReply OnPackButtonClickFun();
 
 
 
