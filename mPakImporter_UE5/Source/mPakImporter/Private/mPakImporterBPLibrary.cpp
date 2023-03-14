@@ -15,18 +15,19 @@ UmPakImporterBPLibrary::UmPakImporterBPLibrary(const FObjectInitializer& ObjectI
 AActor* UmPakImporterBPLibrary::MPakImport(const FString& mPakFile,  bool bSpawnActor, bool bSpawnAccess, const FTransform& spawnTransform, const UObject* WorldContextObject)
 {
 
-
-
 	std::string cstr(TCHAR_TO_UTF8(*mPakFile));
 	unMPakLibTool temp;
 	bool has = temp.unMpak(cstr);
 
 
-
 #if WITH_EDITOR
-	const FString& PakPath = "C:\\Users\\hotWin\\Desktop\\bbbb\\Saved\\Sandboxes\\pie.pak";
+	//const FString& PakPath = "C:\\Users\\hotWin\\Desktop\\ccccccc\\Saved\\Sandboxes\\pie.pak";
+
+	const FString& PakPath = FPaths::ConvertRelativePathToFull(*FPaths::ProjectSavedDir()) + "Sandboxes/pie.pak";
 #else
-	const FString& PakPath = "C:\\Users\\hotWin\\Desktop\\bbbb\\Saved\\Sandboxes\\run.pak";
+	//const FString& PakPath = "C:\\Users\\hotWin\\Desktop\\ccccccc\\Saved\\Sandboxes\\run.pak";
+
+	const FString& PakPath = FPaths::ConvertRelativePathToFull(*FPaths::ProjectSavedDir()) + "Sandboxes/run.pak";
 #endif
 	
 
@@ -76,7 +77,7 @@ AActor* UmPakImporterBPLibrary::MPakImport(const FString& mPakFile,  bool bSpawn
 
 	if (bSpawnAccess)
 	{
-		FString ContentDir = FPaths::ProjectContentDir().Append(TEXT("MakePak"));
+		FString ContentDir = FPaths::ProjectContentDir().Append(TEXT("makePak"));
 		IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 		PlatformFile.CreateDirectory(*ContentDir);
 	}
