@@ -1,0 +1,26 @@
+{
+    "Version": "1.1",
+    "Data": {
+        "Source": "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\intermediate\\build\\win64\\unrealeditor\\development\\mpakimporter\\module.mpakimporter.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\hotwin\\desktop\\myproject\\intermediate\\build\\win64\\myprojecteditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\intermediate\\build\\win64\\unrealeditor\\development\\mpakimporter\\definitions.mpakimporter.h",
+            "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\intermediate\\build\\win64\\unrealeditor\\inc\\mpakimporter\\uht\\mpakimporter.init.gen.cpp",
+            "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\intermediate\\build\\win64\\unrealeditor\\inc\\mpakimporter\\uht\\mpakimporterbplibrary.gen.cpp",
+            "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\source\\mpakimporter\\public\\mpakimporterbplibrary.h",
+            "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\intermediate\\build\\win64\\unrealeditor\\inc\\mpakimporter\\uht\\mpakimporterbplibrary.generated.h",
+            "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\source\\mpakimporter\\private\\mpakimporter.cpp",
+            "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\source\\mpakimporter\\public\\mpakimporter.h",
+            "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\source\\mpakimporter\\private\\mpakimporterbplibrary.cpp",
+            "c:\\users\\hotwin\\desktop\\myproject\\plugins\\mpakimporter_ue5\\thirdparty\\include\\unmpaklib.h",
+            "c:\\program files (x86)\\microsoft visual studio\\2019\\community\\vc\\tools\\msvc\\14.29.30133\\include\\string",
+            "c:\\program files\\epic games\\ue_5.1\\engine\\source\\runtime\\pakfile\\public\\iplatformfilepak.h",
+            "c:\\program files\\epic games\\ue_5.1\\engine\\source\\runtime\\core\\public\\genericplatform\\genericplatformchunkinstall.h",
+            "c:\\program files\\epic games\\ue_5.1\\engine\\source\\runtime\\core\\public\\math\\bigint.h",
+            "c:\\program files\\epic games\\ue_5.1\\engine\\source\\runtime\\rsa\\public\\rsa.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

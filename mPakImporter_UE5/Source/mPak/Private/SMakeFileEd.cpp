@@ -46,7 +46,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 
 			//SNew(SEditableTextBox)
 			SAssignNew(MakeEditableTextBox,SEditableTextBox)
-			.Text(LOCTEXT("makePakDir", "C:/Users/hotWin/Desktop/dddd/Content/makePak"))
+			.Text(LOCTEXT("makePakDir", "C:/Users/hotWin/Desktop/MyProject/Content/makePak"))
 
 		]
 		]
@@ -183,10 +183,10 @@ bool SMakeFileEd::MakePathAndCommand()
 {
 
 	//UEAccessPath
-	UEAccessPath = MakeEditableTextBox->GetText().ToString() + "/*";
+	UEAccess_Path = MakeEditableTextBox->GetText().ToString() + "/*";
 
 	//mpak file out path
-	mPakOutPath = SaveEditableTextBox->GetText().ToString();
+	mPakOut_Path = SaveEditableTextBox->GetText().ToString();
 
 
 	//ProjectRoot
@@ -206,7 +206,7 @@ bool SMakeFileEd::MakePathAndCommand()
 
 
 	//打包编辑器命令
-	PackPieCmd = "UnrealPak " + pakTempDir + "/pie.pak " + UEAccessPath;
+	PackPieCmd = "UnrealPak " + pakTempDir + "/pie.pak " + UEAccess_Path;
 
 	//打包Windows包命令
 	PackWindowsCmd = "UnrealPak " + pakTempDir + "/run.pak " + ProjectRoot + "/Saved/Cooked/Windows/" + ProjectName + CookRight + "/*";
@@ -242,52 +242,19 @@ void SMakeFileEd::DoPackFun()
 	
 
 
-	//引擎的转换方法会出问题
 	std::string MyStdString(TCHAR_TO_UTF8(*PackWindowsCmd));
 	char PackWinCommand[]="";
 	MyStdString.copy(PackWinCommand, MyStdString.size(), 0);
 
 
-
-	//UE_LOG(LogTemp, Warning, TEXT("cookWindowsCmd+++++++++++%s"), *cookWindowsCmd);
-	//UE_LOG(LogTemp, Warning, TEXT("PackPieCmd+++++++++++%s"), *PackPieCmd);
-	//UE_LOG(LogTemp, Warning, TEXT("PackWindowsCmd+++++++++++%s"), *PackWindowsCmd);
-
-
-
-	//system(cookCommand);		//UnrealEditor-Cmd.exe C:/Users/hotPC/Desktop/editP/editP.uproject -run=Cook -TargetPlatform=Windows -CookAll
-	//_sleep(1000);
-	//system(packPieCommand);		//UnrealPak C:/Users/hotPC/Desktop/editP/Saved/Sandboxes/pie.pak C:/Users/hotPC/Desktop/editP/Content/makePak/*
-	//_sleep(1000);
-	//system(PackWinCommand);		//UnrealPak C:/Users/hotPC/Desktop/editP/Saved/Sandboxes/run.pak C:/Users/hotPC/Desktop/editP/Saved/Cooked/Windows/editP/Content/makePak/*
-
-
-
-
-//#if PLATFORM_WINDOWS
-//	FText PlatformName = LOCTEXT("PlatformName_Windows", "Windows");
-//#elif PLATFORM_MAC
-//	FText PlatformName = LOCTEXT("PlatformName_Mac", "Mac");
-//#elif PLATFORM_LINUX
-//	FText PlatformName = LOCTEXT("PlatformName_Linux", "Linux");
-//#else
-//	FText PlatformName = LOCTEXT("PlatformName_Other", "Other OS");
-//#endif
-
-
-
-	//IUATHelperModule::Get().CreateUatTask(CommandLine, PlatformName, LOCTEXT("PackagePluginTaskName", "Packaging Plugin"),LOCTEXT("PackagePluginTaskShortName", "Package mPak file"), FAppStyle::GetBrush(TEXT("MainFrame.CookContent")));
-
 	
-	FString Batpath = FPaths::ConvertRelativePathToFull(FPaths::ProjectPluginsDir());
-	Batpath += "mPakImporter_UE5/ThirdParty/BuildMPak.bat";
+	FString ProjectPluginsDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectPluginsDir());
+	FString Batpath = ProjectPluginsDir += "mPakImporter_UE5/ThirdParty/BuildMPak.bat";
 	
 
 
 
 	FPaths::NormalizeFilename(Batpath);
-	//FString Param = TEXT("");
-	FString Param = mPakOutPath;
 
 
 
@@ -297,9 +264,7 @@ void SMakeFileEd::DoPackFun()
 	//::PakSourceListFile_pie
 	//::PakSourceListFile_run
 	//::mPakOutput
-
-
-	FString TargetPakFile_pie = FString(pakTempDir + "/pie.pak");
+  	FString TargetPakFile_pie = FString(pakTempDir + "/pie.pak");
 	FString TargetPakFile_run = FString(pakTempDir + "/run.pak");
 	FString PakSourceListFile_pie = FString(pakTempDir + "/run.pak");
 	FString PakSourceListFile_run = FString(ProjectRoot + "/Saved/Cooked/Windows/" + ProjectName + CookRight + "/*");
@@ -311,12 +276,13 @@ void SMakeFileEd::DoPackFun()
 	batParam += FString::Printf(TEXT(" %s"), *Project_uproject);
 	batParam += FString::Printf(TEXT(" %s"), *TargetPakFile_pie);
 	batParam += FString::Printf(TEXT(" %s"), *TargetPakFile_run);
-	batParam += FString::Printf(TEXT(" %s"), *UEAccessPath);
+	batParam += FString::Printf(TEXT(" %s"), *UEAccess_Path);
 	batParam += FString::Printf(TEXT(" %s"), *PakSourceListFile_run);
-	batParam += FString::Printf(TEXT(" %s"), *mPakOutPath);
+	batParam += FString::Printf(TEXT(" %s"), *mPakOut_Path);
 
 
-	
+
+
 
 	//启动器是否隐藏
 	//启动器是否真正的隐藏	   3
@@ -327,22 +293,6 @@ void SMakeFileEd::DoPackFun()
 	FProcHandle Handle = FPlatformProcess::CreateProc(*Batpath, *batParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
 	FPlatformProcess::WaitForProc(Handle);
 
-
-
-
-	//FString uPiePath = pakTempDir + "/pie.pak";
-	//FString uRunPath = pakTempDir + "/run.pak";
-	//FString uOutPath = pakTempDir + "/out.mpak";
-
-
-	//std::string piePath(TCHAR_TO_UTF8(*uPiePath));
-	//std::string runPath(TCHAR_TO_UTF8(*uRunPath));
-	//std::string outPath(TCHAR_TO_UTF8(*uOutPath));
-
-
-
-	//unMPakLibTool makePack;
-	//makePack.PackMpak(piePath,runPath,outPath);
 
 
 

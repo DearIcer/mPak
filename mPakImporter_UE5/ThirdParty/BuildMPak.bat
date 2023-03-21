@@ -17,7 +17,7 @@ SET PakSourceListFile_run=%5
 SET mPakOutput=%6
 
 SET UnrealPak_EXE="UnrealPak.exe"
-SET mPakCore="C:\tools\mPakCore.exe"
+SET mPakCore="mPakCore.exe"
 
 %UE_EXE% %Project% -run=Cook -TargetPlatform=Windows -unversioned -stdout -CrashForUAT -unattended -NoLogTimes -UTF8Output
 
@@ -25,7 +25,7 @@ SET mPakCore="C:\tools\mPakCore.exe"
 
 %UnrealPak_EXE% %TargetPakFile_run% %PakSourceListFile_run%
 
-mPakCore %TargetPakFile_pie% %TargetPakFile_run% -output=%mPakOutput%
+mPakCore %TargetPakFile_pie% %TargetPakFile_run% -o=%mPakOutput%
 
 echo "-----------------------------------------------------------------"
 
@@ -35,6 +35,5 @@ echo %UnrealPak_EXE% %TargetPakFile_pie% %PakSourceListFile_pie%
 
 echo %UnrealPak_EXE% %TargetPakFile_run% %PakSourceListFile_run%
 
-echo mPakCore %TargetPakFile_pie% %TargetPakFile_run% -output=%mPakOutput%
-
+echo mPakCore %TargetPakFile_pie% %TargetPakFile_run% -o=%mPakOutput%
 

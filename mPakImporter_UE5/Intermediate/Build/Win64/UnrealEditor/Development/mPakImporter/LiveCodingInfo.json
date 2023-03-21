@@ -1,0 +1,11 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.mPakImporter.cpp.obj": [
+			"mPakImporter.init.gen.cpp.obj",
+			"mPakImporterBPLibrary.gen.cpp.obj",
+			"mPakImporter.cpp.obj",
+			"mPakImporterBPLibrary.cpp.obj"
+		]
+	}
+}
