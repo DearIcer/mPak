@@ -16,11 +16,10 @@
     </a>
 </p>
 
-# mPak Usage:
-- [-help]         help
-- [-output=path]  Save to path		 
-- [.pak] [.pak]   Package multiple files into mPak		 
-- [file.mpak]     Split the mPak to multiple files
+# mPakCore Usage:
+- [Pack]	mPakCore a.pak b.pak c.pak -o=outfile.mpak
+- [unPakc]  mPakCore outfile.mpak -o=C:\Users\admin\Desktop\		 
+
 
 # mPakImporter Usage:
 <img src="./img/mPakImporter.png" width="250px"></img>
