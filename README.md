@@ -16,14 +16,21 @@
     </a>
 </p>
 
+# file structure:
+<img src="./img/FileStructure.jpg" width="500px"></img>
+
 # mPakCore Usage:
 - [Pack]	mPakCore a.pak b.pak c.pak -o=outfile.mpak
 - [unPakc]  mPakCore outfile.mpak -o=C:\Users\admin\Desktop\		 
 
+# Make mPak file:
+ <img src="./img/makeMPak.png" width="250px"></img>
 
-# mPakImporter Usage:
+
+# mPak importer Usage:
 <img src="./img/mPakImporter.png" width="250px"></img>
 <img src="./img/mPakImporter1.png" width="250px"></img>
+
 - Download and enable the mPakImporter
 
 
@@ -35,8 +42,7 @@
 - Reduce the complexity of functional testing
 
 
-# file structure:
-<img src="./img/FileStructure.jpg" width="500px"></img>
+
 
 
 
