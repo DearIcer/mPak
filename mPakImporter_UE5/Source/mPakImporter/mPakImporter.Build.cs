@@ -73,7 +73,8 @@ public class mPakImporter : ModuleRules
 
         PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "include"));
         PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "lib", "unMPakLib.lib"));
-       
+		PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "lib", "mPakCore.lib"));
 
-    }
+
+	}
 }

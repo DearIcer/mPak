@@ -32,9 +32,14 @@ class UmPakImporterBPLibrary : public UBlueprintFunctionLibrary
 
 
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
-		static AActor* MPakImport(const FString& mPakFile,  bool bSpawnActor, bool bSpawnAccess, const FTransform& spawnTransform, const UObject* WorldContextObject);
+		static AActor* mpakImport(const FString& mPakFile,  bool bSpawnActor, bool bSpawnAccess, const FTransform& spawnTransform, const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable)
+		static FString getLibStr(FString inStr);
 
 
-
+	
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"))
+		static AActor* MPakImportFormCore(const FString& mPakFile, bool bSpawnActor, bool bSpawnAccess, const FTransform& spawnTransform, const UObject* WorldContextObject);
 
 };

@@ -17,7 +17,7 @@ SET PakSourceListFile_run=%5
 SET mPakOutput=%6
 
 SET UnrealPak_EXE="UnrealPak.exe"
-SET mPakCore="mPakCore.exe"
+SET mPakCore="mPakCore2.exe"
 
 %UE_EXE% %Project% -run=Cook -TargetPlatform=Windows -unversioned -stdout -CrashForUAT -unattended -NoLogTimes -UTF8Output
 
