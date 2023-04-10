@@ -16,6 +16,11 @@
     </a>
 </p>
 
+# about:
+
+This project provides pak packages and mounting methods, and integrates paks of different platforms and uncooked assets into mpak files, so that the files can be used across platforms and support mounting at different stages, such as development in the editor Stages and release stages after project packaging
+
+
 # file structure:
 <img src="./img/FileStructure.jpg" width="500px"></img>
 
@@ -40,9 +45,3 @@
 - Making Unreal Engine project more flexible and free
 - Breaking down the boundaries between developer and user
 - Reduce the complexity of functional testing
-
-
-
-
-
-
