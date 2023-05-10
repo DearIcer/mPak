@@ -116,6 +116,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 							[
 								//SNew(SCheckBox)
 								SAssignNew(HololensCheckBox, SCheckBox)
+								.IsEnabled(false)							
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
@@ -127,6 +128,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 							[
 								//SNew(SCheckBox)
 								SAssignNew(AndroidCheckBox, SCheckBox)
+								.IsEnabled(false)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
@@ -138,6 +140,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 							[
 								//SNew(SCheckBox)
 								SAssignNew(LinuxCheckBox, SCheckBox)
+								.IsEnabled(false)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
@@ -149,6 +152,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 							[
 								//SNew(SCheckBox)
 								SAssignNew(IOSCheckBox, SCheckBox)
+								.IsEnabled(false)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
