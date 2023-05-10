@@ -6,7 +6,9 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "mPakCore.h"
 #include <UATHelper/Public/IUATHelperModule.h>
-//#include <Windows/LiveCodingServer/Private/External/LC_ImmutableString.h>
+#include <ContentBrowserModule.h>
+#include <IContentBrowserSingleton.h>
+
 
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
@@ -46,7 +48,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 
 			//SNew(SEditableTextBox)
 			SAssignNew(MakeEditableTextBox,SEditableTextBox)
-			.Text(LOCTEXT("makePakDir", "C:/Users/hotWin/Desktop/MyProject/Content/makePak"))
+			.Text(this,&SMakeFileEd::GetSelectDirectory)
 
 		]
 		]
@@ -312,6 +314,69 @@ FReply SMakeFileEd::OnPackButtonClickFun()
 	}
 
   	return FReply::Handled();
+}
+
+//FText SMakeFileEd::GetSelectDirectory()
+//{
+//	FString res = "";
+//
+//	TArray<FAssetData> AssetDatas;
+//	FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
+//	IContentBrowserSingleton& ContentBrowserSingleton = ContentBrowserModule.Get();
+//	TArray<FString> Folders;
+//	ContentBrowserSingleton.GetSelectedFolders(Folders);
+//
+//
+//
+//	FString absContentPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir()) + "Content";
+//
+//	if (Folders.Num() > 0)
+//	{
+//		FString FullSelectPaht = Folders[0].Replace(TEXT("/All/Game"), *absContentPath);
+//		res = FullSelectPaht;
+//	}
+//	else
+//	{
+//		res = "please select Folder";
+//	}
+//
+//
+//	UE_LOG(LogTemp, Display, TEXT("res: %s"), *res);
+//
+//	return FText::FromString(res);
+//
+//}
+
+
+FText SMakeFileEd::GetSelectDirectory() const
+{
+
+
+	FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
+	IContentBrowserSingleton& ContentBrowserSingleton = ContentBrowserModule.Get();
+	TArray<FString> Folders;
+	ContentBrowserSingleton.GetSelectedFolders(Folders);
+
+	
+	FString absContentPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir()) + "Content";
+
+	if (Folders.Num() > 0)
+	{
+		FString FullSelectPaht = Folders[0].Replace(TEXT("/All/Game"), *absContentPath);
+		
+		//暂不支持插件路径
+		//FString FullSelectPaht = Folders[0].Replace(TEXT("/All/Plugins"), *absContentPath);
+
+		const FText res = FText::FromString(FullSelectPaht);
+		return res;
+	}
+	else
+	{
+		const FText res = FText::FromString("Please Select a folder in the Content browser");
+		return res;
+		
+	}
+
 }
 
 #undef LOCTEXT_NAMESPACE

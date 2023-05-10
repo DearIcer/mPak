@@ -43,6 +43,7 @@ public:
 
 
 
+	FText GetSelectDirectory() const;
 
 private:
 
@@ -64,6 +65,7 @@ private:
 
 
 	FReply OnPackButtonClickFun();
+
 
 
 

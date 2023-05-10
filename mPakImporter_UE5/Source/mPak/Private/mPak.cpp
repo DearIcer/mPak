@@ -12,6 +12,9 @@
 
 
 
+
+
+
 static const FName mPakTabName("mPak");
 
 #define LOCTEXT_NAMESPACE "FmPakModule"
@@ -62,6 +65,13 @@ TSharedRef<SDockTab> FmPakModule::OnSpawnPluginTab(const FSpawnTabArgs& SpawnTab
 	//	FText::FromString(TEXT("FmPakModule::OnSpawnPluginTab")),
 	//	FText::FromString(TEXT("mPak.cpp"))
 	//	);
+
+
+	
+
+
+
+
 
 
 
