@@ -14,26 +14,6 @@
  * 
  */
 
-
-
- //预打包资产的路径 , 项目root , 项目名 , 项目_uproject  ,cook右边的路径
-FString UEAccess_Path = "";
-FString ProjectRoot = "";
-FString ProjectName = "";
-FString Project_uproject = "";
-FString PackPieCmd = "";
-FString PackWindowsCmd = "";
-FString CookRight = "";			//\Content\makePak
-FString mPakOut_Path = "";
-
-
-
-//将打包文件临时放在save的沙盒里面
-FString pakTempDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir());
-
-
-
-
 class MPAK_API SMakeFileEd : public SCompoundWidget
 {
 public:
@@ -62,15 +42,28 @@ private:
 	TSharedPtr<SCheckBox> IOSCheckBox;
 
 
-	bool MakePathAndCommand();
 
-	void DoPackFun();
 
-	void CookWin();
+
+
+	
+
+	void DoCookPlantformTask(FString Plantform);
+	void DoPackPlantformTask(FString Plantform);
 
 	FReply OnPackButtonClickFun();
 
 
+private:
+	//获取各种路径
+	FString ProjectPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
 
+	FString FullProjectName = FPaths::ConvertRelativePathToFull(FPaths::GetProjectFilePath());
+
+	FString EngineDir = FPaths::ConvertRelativePathToFull(FPaths::EngineDir());
+	FString EditorCmdPath = FPaths::Combine(*EngineDir, TEXT("Binaries"), TEXT("Win64"), TEXT("UnrealEditor-Cmd.exe"));	 \
+
+		FString ProjectPluginsDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectPluginsDir());
+	FString cookBatpath = ProjectPluginsDir += "mPak/ThirdParty/CookContent.bat";
 
 };

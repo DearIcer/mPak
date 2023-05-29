@@ -130,7 +130,7 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 							[
 								//SNew(SCheckBox)
 								SAssignNew(AndroidCheckBox, SCheckBox)
-								.IsEnabled(false)
+								//.IsEnabled(false)
 								.IsChecked(false)
 								[
 									SNew(STextBlock)
@@ -186,176 +186,109 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
-bool SMakeFileEd::MakePathAndCommand()
-{
-
-	//UEAccessPath
-	UEAccess_Path = MakeEditableTextBox->GetText().ToString() + "/*";
-
-	//mpak file out path
-	mPakOut_Path = SaveEditableTextBox->GetText().ToString();
-
-
-	//ProjectRoot
-	int32 ContentIndex = MakeEditableTextBox->GetText().ToString().Find(TEXT("Content"));
-	ProjectRoot = MakeEditableTextBox->GetText().ToString().Left(ContentIndex - 1);
-
-
-	//ProjectName
-	ProjectName = UKismetSystemLibrary::GetGameName();
-
-	//Project_uproject
-	//Project_uproject = ProjectRoot + "/" + ProjectName + ".uproject";
-	Project_uproject = FPaths::ConvertRelativePathToFull(FPaths::GetProjectFilePath());
-
-	//CookRight
-	CookRight = MakeEditableTextBox->GetText().ToString().Right(MakeEditableTextBox->GetText().ToString().Len() - ProjectRoot.Len());
-
-
-	//打包编辑器命令
-	PackPieCmd = "UnrealPak " + pakTempDir + "/pie.pak " + UEAccess_Path;
-
-	//打包Windows包命令
-	PackWindowsCmd = "UnrealPak " + pakTempDir + "/run.pak " + ProjectRoot + "/Saved/Cooked/Windows/" + ProjectName + CookRight + "/*";
-	
-	
-	return true;
-
-}
 
 
 
-void SMakeFileEd::DoPackFun()
-{
-	FString EngineDir = FPaths::EngineDir();
-	FString UnrealEditorCmdPath = FPaths::Combine(*EngineDir, TEXT("Binaries"), TEXT("Win64"), TEXT("UnrealEditor-Cmd.exe"));
-
-
-	FString  str1 = UnrealEditorCmdPath + " ";
-	FString  str2 = Project_uproject;
-	FString  str3 = " -run=Cook -TargetPlatform=Windows -unversioned -stdout -CrashForUAT -unattended -NoLogTimes -UTF8Output";
-   	FString cookWindowsCmd = str1 + str2 + str3;
-
-
-
-	//引擎的转换方法会出问题
-	std::string MyStdString1(TCHAR_TO_UTF8(*cookWindowsCmd));
-	char cookCommand[] = "";
-	MyStdString1.copy(cookCommand, MyStdString1.size(), 0);
-
-
-	const char* packPieCommand = TCHAR_TO_ANSI(*PackPieCmd);		//UnrealPak C:/Users/hotPC/Desktop/editP/Saved/Sandboxes/pie.pak C:/Users/hotPC/Desktop/editP/Content/makePak/*
-
-
-
-	std::string MyStdString(TCHAR_TO_UTF8(*PackWindowsCmd));
-	char PackWinCommand[]="";
-	MyStdString.copy(PackWinCommand, MyStdString.size(), 0);
-
-
-	
-	FString ProjectPluginsDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectPluginsDir());
-	FString Batpath = ProjectPluginsDir += "mPakImporter_UE5/ThirdParty/BuildMPak.bat";
-	
-
-
-
-	FPaths::NormalizeFilename(Batpath);
-
-
-
-	//::ProjectName
-	//::TargetPakFile_pie
-	//::TargetPakFile_run
-	//::PakSourceListFile_pie
-	//::PakSourceListFile_run
-	//::mPakOutput
-  	FString TargetPakFile_pie = FString(pakTempDir + "/pie.pak");
-	FString TargetPakFile_run = FString(pakTempDir + "/run.pak");
-	FString PakSourceListFile_pie = FString(pakTempDir + "/run.pak");
-	FString PakSourceListFile_run = FString(ProjectRoot + "/Saved/Cooked/Windows/" + ProjectName + CookRight + "/*");
-
-
-
-
-	FString batParam;
-	batParam += FString::Printf(TEXT(" %s"), *Project_uproject);
-	batParam += FString::Printf(TEXT(" %s"), *TargetPakFile_pie);
-	batParam += FString::Printf(TEXT(" %s"), *TargetPakFile_run);
-	batParam += FString::Printf(TEXT(" %s"), *UEAccess_Path);
-	batParam += FString::Printf(TEXT(" %s"), *PakSourceListFile_run);
-	batParam += FString::Printf(TEXT(" %s"), *mPakOut_Path);
-
-
-
-
-
-	//启动器是否隐藏
-	//启动器是否真正的隐藏	   3
-	//返回创建进程的ID
-	//优先级默认0
-	//指定工作路径
-	//剩下两个参数是管线相关的内容
-	FProcHandle Handle = FPlatformProcess::CreateProc(*Batpath, *batParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
-	FPlatformProcess::WaitForProc(Handle);
-
-}
-
-
-
-void SMakeFileEd::CookWin()
-{
-    //获取各种路径
-	FString ProjectPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
-
-	FString FullProjectName = FPaths::ConvertRelativePathToFull(FPaths::GetProjectFilePath());
-
-	FString EngineDir = FPaths::ConvertRelativePathToFull(FPaths::EngineDir());
-	FString EditorCmdPath = FPaths::Combine(*EngineDir, TEXT("Binaries"), TEXT("Win64"), TEXT("UnrealEditor-Cmd.exe"));	 \
-
-	FString ProjectPluginsDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectPluginsDir());
-	FString cookBatpath = ProjectPluginsDir += "mPak/ThirdParty/CookContent.bat";
-
-	FString TargetPlatform = TEXT("Windows");
-
-	
-
-	//路径有可能存在空格
-	FString batParam;
-	batParam += FString::Printf(TEXT(" \"%s\""), *EditorCmdPath);
-	batParam += FString::Printf(TEXT(" \"%s\""), *FullProjectName);
-	batParam += FString::Printf(TEXT(" \"%s\""), *TargetPlatform);
-
-  	/*
-	C:/Program Files/Epic Games/UE_5.2/Engine/Binaries/Win64/UnrealEditor-Cmd.exe
-	C:/Users/hotWin/Desktop/dddd/dddd.uproject
-	Windows
-	*/
-
-
-	FProcHandle Handle = FPlatformProcess::CreateProc(*cookBatpath, *batParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
-	FPlatformProcess::WaitForProc(Handle);
-
-
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *EditorCmdPath);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *FullProjectName);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *TargetPlatform);
-
-
-
-}
 FReply SMakeFileEd::OnPackButtonClickFun()
 {
 
-	CookWin();
-	//if (MakePathAndCommand())
+	//if (WindowsCheckBox->IsChecked())
 	//{
-	//	DoPackFun();
-	//	
+	//	DoCookPlantformTask(TEXT("Windows"));
 	//}
 
-  	return FReply::Handled();
+
+	
+	//if (AndroidCheckBox->IsChecked())
+	//{
+	//	DoCookPlantformTask(TEXT("Android_ASTC"));
+	//}
+
+	DoPackPlantformTask(TEXT("Editor"));
+
+
+
+
+	return FReply::Handled();
 }
+
+
+
+void SMakeFileEd::DoCookPlantformTask(FString Plantform)
+{
+
+
+	//路径有可能存在空格	 所以转义双引号
+   	
+	FString CookWindowsParam;
+	CookWindowsParam += FString::Printf(TEXT(" \"%s\""), *EditorCmdPath);	  //C:/Program Files/Epic Games/UE_5.2/Engine/Binaries/Win64/UnrealEditor-Cmd.exe
+	CookWindowsParam += FString::Printf(TEXT(" \"%s\""), *FullProjectName);		//C:/Users/hotWin/Desktop/dddd/dddd.uproject
+	CookWindowsParam += FString::Printf(TEXT(" \"%s\""), *Plantform);			//Windows
+
+	FProcHandle CookWinHandle = FPlatformProcess::CreateProc(*cookBatpath, *CookWindowsParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
+	FPlatformProcess::WaitForProc(CookWinHandle);
+
+
+
+	//Cook 安卓
+   //FString CookAndroidParam;
+   //CookAndroidParam += FString::Printf(TEXT(" \"%s\""), *EditorCmdPath);
+   //CookAndroidParam += FString::Printf(TEXT(" \"%s\""), *FullProjectName);
+   //CookAndroidParam += FString::Printf(TEXT(" \"%s\""), TEXT("Android_ASTC"));
+
+   //FProcHandle CookAndroidHandle = FPlatformProcess::CreateProc(*cookBatpath, *CookAndroidParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
+   //FPlatformProcess::WaitForProc(CookAndroidHandle);
+
+
+}
+
+
+
+void SMakeFileEd::DoPackPlantformTask(FString Plantform)
+{
+	
+	FString UnrealPakPath = FPaths::ConvertRelativePathToFull(FPaths::EngineDir() / TEXT("Binaries/Win64/UnrealPak.exe"));    //UnrealPak的相对路径
+	FString EditorAssicePath = MakeEditableTextBox->GetText().ToString();
+	FString AndroidAssicePath = "";
+	FString WindowsAssicePath = "";
+
+
+
+
+	if (Plantform.Equals("Editor"))
+	{
+
+		FString outFile = FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("editor.pak"));
+		FString   PackWindowsParam;
+		//PackWindowsParam += FString::Printf(TEXT(" '"'%s'\*"'"), *EditorAssicePath);
+ 		PackWindowsParam += FString::Printf(TEXT(" %s"), *FPaths::ConvertRelativePathToFull(*outFile));
+		PackWindowsParam += FString::Printf(TEXT(" ""%s""/*"), *EditorAssicePath);
+
+	
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *UnrealPakPath);
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *PackWindowsParam);
+
+		FProcHandle PackEcitorHandle = FPlatformProcess::CreateProc(*UnrealPakPath, *PackWindowsParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
+		FPlatformProcess::WaitForProc(PackEcitorHandle);
+	
+	}
+	else if (Plantform.Equals("Windows"))
+	{
+		// do something else
+	}
+	else if (Plantform.Equals("Android_ASTC"))
+	{
+		// do something else
+	}
+	else
+	{
+		// default case
+	}
+
+		
+	
+}
+
 
 
 
