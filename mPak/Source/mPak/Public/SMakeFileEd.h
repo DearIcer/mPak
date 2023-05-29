@@ -63,7 +63,7 @@ private:
 	FString EngineDir = FPaths::ConvertRelativePathToFull(FPaths::EngineDir());
 	FString EditorCmdPath = FPaths::Combine(*EngineDir, TEXT("Binaries"), TEXT("Win64"), TEXT("UnrealEditor-Cmd.exe"));	 \
 
-		FString ProjectPluginsDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectPluginsDir());
+	FString ProjectPluginsDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectPluginsDir());
 	FString cookBatpath = ProjectPluginsDir += "mPak/ThirdParty/CookContent.bat";
 
 };

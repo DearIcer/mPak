@@ -204,7 +204,11 @@ FReply SMakeFileEd::OnPackButtonClickFun()
 	//	DoCookPlantformTask(TEXT("Android_ASTC"));
 	//}
 
+
+
 	DoPackPlantformTask(TEXT("Editor"));
+	DoPackPlantformTask(TEXT("Windows"));
+	//DoPackPlantformTask(TEXT("Android_ASTC"));
 
 
 
@@ -231,13 +235,13 @@ void SMakeFileEd::DoCookPlantformTask(FString Plantform)
 
 
 	//Cook 安卓
-   //FString CookAndroidParam;
-   //CookAndroidParam += FString::Printf(TEXT(" \"%s\""), *EditorCmdPath);
-   //CookAndroidParam += FString::Printf(TEXT(" \"%s\""), *FullProjectName);
-   //CookAndroidParam += FString::Printf(TEXT(" \"%s\""), TEXT("Android_ASTC"));
+	FString CookAndroidParam;
+	CookAndroidParam += FString::Printf(TEXT(" \"%s\""), *EditorCmdPath);
+	CookAndroidParam += FString::Printf(TEXT(" \"%s\""), *FullProjectName);
+	CookAndroidParam += FString::Printf(TEXT(" \"%s\""), TEXT("Android_ASTC"));
 
-   //FProcHandle CookAndroidHandle = FPlatformProcess::CreateProc(*cookBatpath, *CookAndroidParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
-   //FPlatformProcess::WaitForProc(CookAndroidHandle);
+	FProcHandle CookAndroidHandle = FPlatformProcess::CreateProc(*cookBatpath, *CookAndroidParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
+	FPlatformProcess::WaitForProc(CookAndroidHandle);
 
 
 }
@@ -248,10 +252,20 @@ void SMakeFileEd::DoPackPlantformTask(FString Plantform)
 {
 	
 	FString UnrealPakPath = FPaths::ConvertRelativePathToFull(FPaths::EngineDir() / TEXT("Binaries/Win64/UnrealPak.exe"));    //UnrealPak的相对路径
-	FString EditorAssicePath = MakeEditableTextBox->GetText().ToString();
-	FString AndroidAssicePath = "";
-	FString WindowsAssicePath = "";
+	
 
+
+	//C:/Users/hotWin/Desktop/dddd/Content/MakePak
+	FString EditorStr = MakeEditableTextBox->GetText().ToString();
+
+	//MakePak
+	FString Right = EditorStr.RightChop(EditorStr.Find(TEXT("Content/"), ESearchCase::IgnoreCase, ESearchDir::FromStart) + FString("Content/").Len());
+
+
+	//Cook之后的资产路径
+	FString EditorAssicePath = MakeEditableTextBox->GetText().ToString();
+	FString WindowsCookPath = FPaths::Combine(FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir()), TEXT("Cooked/Windows"), FApp::GetProjectName(), TEXT("Content"), Right);
+	FString AndroidCookPath = FPaths::Combine(FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir()), TEXT("Cooked/Android_ASTC"), FApp::GetProjectName(), TEXT("Content"), Right);
 
 
 
@@ -259,14 +273,11 @@ void SMakeFileEd::DoPackPlantformTask(FString Plantform)
 	{
 
 		FString outFile = FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("editor.pak"));
+
 		FString   PackWindowsParam;
 		//PackWindowsParam += FString::Printf(TEXT(" '"'%s'\*"'"), *EditorAssicePath);
  		PackWindowsParam += FString::Printf(TEXT(" %s"), *FPaths::ConvertRelativePathToFull(*outFile));
 		PackWindowsParam += FString::Printf(TEXT(" ""%s""/*"), *EditorAssicePath);
-
-	
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *UnrealPakPath);
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *PackWindowsParam);
 
 		FProcHandle PackEcitorHandle = FPlatformProcess::CreateProc(*UnrealPakPath, *PackWindowsParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
 		FPlatformProcess::WaitForProc(PackEcitorHandle);
@@ -274,11 +285,31 @@ void SMakeFileEd::DoPackPlantformTask(FString Plantform)
 	}
 	else if (Plantform.Equals("Windows"))
 	{
-		// do something else
+
+		FString outFile = FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("windows.pak"));
+
+		FString   PackWindowsParam;
+		//PackWindowsParam += FString::Printf(TEXT(" '"'%s'\*"'"), *WindowsCookPath);
+		PackWindowsParam += FString::Printf(TEXT(" %s"), *FPaths::ConvertRelativePathToFull(*outFile));
+		PackWindowsParam += FString::Printf(TEXT(" ""%s""/*"), *WindowsCookPath);
+
+		FProcHandle PackEcitorHandle = FPlatformProcess::CreateProc(*UnrealPakPath, *PackWindowsParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
+		FPlatformProcess::WaitForProc(PackEcitorHandle);
+
+
+
 	}
 	else if (Plantform.Equals("Android_ASTC"))
 	{
-		// do something else
+		FString outFile = FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("android.pak"));
+
+		FString   PackWindowsParam;
+		//PackWindowsParam += FString::Printf(TEXT(" '"'%s'\*"'"), *AndroidCookPath);
+		PackWindowsParam += FString::Printf(TEXT(" %s"), *FPaths::ConvertRelativePathToFull(*outFile));
+		PackWindowsParam += FString::Printf(TEXT(" ""%s""/*"), *AndroidCookPath);
+
+		FProcHandle PackEcitorHandle = FPlatformProcess::CreateProc(*UnrealPakPath, *PackWindowsParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
+		FPlatformProcess::WaitForProc(PackEcitorHandle);
 	}
 	else
 	{
