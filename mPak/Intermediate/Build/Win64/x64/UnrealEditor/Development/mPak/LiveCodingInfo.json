@@ -1,0 +1,11 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.mPak.cpp.obj": [
+			"mPak.cpp.obj",
+			"mPakCommands.cpp.obj",
+			"mPakStyle.cpp.obj",
+			"SMakeFileEd.cpp.obj"
+		]
+	}
+}
