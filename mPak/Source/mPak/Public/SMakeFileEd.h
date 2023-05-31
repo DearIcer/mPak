@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Misc/Paths.h"
+#include "mPakImporter/Public/mPakFileHandle.h"
 #include "Widgets/SCompoundWidget.h"
 
 
@@ -44,12 +45,13 @@ private:
 
 
 
-
-
-	
-
 	void DoCookPlantformTask(FString Plantform);
 	void DoPackPlantformTask(FString Plantform);
+
+
+	TArray<FString> GetAllPakFilesInDirectory(const FString& Directory);
+
+
 
 	FReply OnPackButtonClickFun();
 

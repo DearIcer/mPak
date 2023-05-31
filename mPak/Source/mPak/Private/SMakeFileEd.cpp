@@ -10,7 +10,7 @@
 #include <IContentBrowserSingleton.h>
 
 
-
+// Slate UI框架时优化编译时间和构建时间
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 #define LOCTEXT_NAMESPACE "SMakeFileEd"
@@ -187,30 +187,37 @@ void SMakeFileEd::Construct(const FArguments& InArgs)
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 
-
-
 FReply SMakeFileEd::OnPackButtonClickFun()
-{
+{	
 
-	//if (WindowsCheckBox->IsChecked())
-	//{
-	//	DoCookPlantformTask(TEXT("Windows"));
-	//}
-
-
-	
-	//if (AndroidCheckBox->IsChecked())
-	//{
-	//	DoCookPlantformTask(TEXT("Android_ASTC"));
-	//}
-
-
-
-	DoPackPlantformTask(TEXT("Editor"));
-	DoPackPlantformTask(TEXT("Windows"));
-	//DoPackPlantformTask(TEXT("Android_ASTC"));
+	if (WindowsEditorCheckBox->IsChecked())
+	{
+		DoPackPlantformTask(TEXT("Editor"));
+	}
+	if (WindowsCheckBox->IsChecked())
+	{
+		DoCookPlantformTask(TEXT("Windows"));
+		DoPackPlantformTask(TEXT("Windows"));
+	}
+	if (AndroidCheckBox->IsChecked())
+	{
+		DoCookPlantformTask(TEXT("Android_ASTC"));
+		DoPackPlantformTask(TEXT("Android_ASTC"));
+	}
 
 
+	//获取打包后的所有pak文件
+	FString saveDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir());
+	TArray<FString> allPak = GetAllPakFilesInDirectory(saveDir);
+
+	for (auto pak:allPak)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *pak);
+	}
+
+
+	TArray<uint8>mPakByte =  UmPakFileHandle::mPakMaker(allPak, TEXT(""));
+ 	UmPakFileHandle::WriteByte2File(mPakByte, SaveEditableTextBox->GetText().ToString());
 
 
 	return FReply::Handled();
@@ -314,12 +321,41 @@ void SMakeFileEd::DoPackPlantformTask(FString Plantform)
 	else
 	{
 		// default case
+
+
 	}
 
-		
 	
 }
 
+
+TArray<FString> SMakeFileEd::GetAllPakFilesInDirectory(const FString& Directory)
+{
+
+
+	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+	TArray<FString> FileNames;
+
+   	PlatformFile.IterateDirectory(*Directory, [&FileNames](const TCHAR* FilenameOrDirectory, bool bIsDirectory) -> bool
+		{
+			if (!bIsDirectory)
+			{
+				FString Extension = FPaths::GetExtension(FilenameOrDirectory);
+				if (Extension.Equals(TEXT("pak"), ESearchCase::IgnoreCase))
+				{
+					FileNames.Add(FilenameOrDirectory);
+				}
+			}
+			return true;
+		});
+
+	//for (const auto& File : FileNames)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("File: %s"), *File);
+	//}
+
+	return FileNames;
+}
 
 
 
