@@ -29,9 +29,10 @@ TArray<uint8> UmPakFileHandle::ReadFile2Byte(FString inPath)
 	return FileData;
 }
 
-bool UmPakFileHandle::mPakUnpack(TArray<uint8> inByteArr, FString SaveFilePath)
+bool UmPakFileHandle::mPakUnpackage(FString exportPath,FString mPakFile)
 {
-	TArray<uint8> byteArray = inByteArr;
+
+	TArray<uint8> byteArray = ReadFile2Byte(mPakFile);
 
 	uint8* bytePtr = byteArray.GetData();
 	// 从TArray<uint8>中读取int32和结构体数组
@@ -59,7 +60,7 @@ bool UmPakFileHandle::mPakUnpack(TArray<uint8> inByteArr, FString SaveFilePath)
 		FMemory::Memcpy(fileData.GetData(), bytePtr, fileSize);
 		bytePtr += fileSize;
 
-		FString filePath = SaveFilePath / fileName;
+		FString filePath = exportPath / fileName;
 		if (!FFileHelper::SaveArrayToFile(fileData, *filePath)) {
 			UE_LOG(LogTemp, Error, TEXT("Failed to save file %s"), *filePath);
 			return false;
@@ -75,13 +76,13 @@ bool UmPakFileHandle::mPakUnpack(TArray<uint8> inByteArr, FString SaveFilePath)
 	return true;
 }
 
-TArray<uint8> UmPakFileHandle::mPakMaker(TArray<FString> inFilePtahs, FString outFile)
+TArray<uint8> UmPakFileHandle::mPakPackage(TArray<FString> inFilePtahs, FString SaveFilePath, bool& Success)
 {
 
 	// 存储结构体对象到TArray<uint8>中
 	TArray<uint8> byteArray;
 	int32 numStructs = inFilePtahs.Num();
-	byteArray.AddUninitialized(sizeof(int32) + sizeof(FileInfo) * numStructs);	 //设置字节集长度
+	byteArray.AddUninitialized(sizeof(int32) + sizeof(FileInfo) * numStructs);	
 	uint8* bytePtr = byteArray.GetData();
 
 	// 存储int32
@@ -110,13 +111,21 @@ TArray<uint8> UmPakFileHandle::mPakMaker(TArray<FString> inFilePtahs, FString ou
 	for (int i = 0; i < numStructs; i++) {
 		TArray<uint8> fileData;
 		if (FFileHelper::LoadFileToArray(fileData, *inFilePtahs[i])) {    // 读取文件到TArray
-			byteArray.Append(fileData);      // 添加数据块到byteArray中
+			byteArray.Append(fileData);      // 数据块
 		}
 	}
 
+	 if (SaveFilePath !="")
+	 {
+		WriteByte2File(byteArray, SaveFilePath);
+	 }
+
+	 
+	 Success = FPaths::FileExists(SaveFilePath);
+
 	// 将打包好的数据写入文件
-/*	int32 bytesWritten = 0;
-	FFileHelper::SaveArrayToFile(byteArray, *outFile, &bytesWritten);
+	/*	int32 bytesWritten = 0;
+	 *	FFileHelper::SaveArrayToFile(byteArray, *SaveFilePath, &bytesWritten);
 	 */
 	return byteArray;
 }

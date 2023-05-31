@@ -215,9 +215,10 @@ FReply SMakeFileEd::OnPackButtonClickFun()
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *pak);
 	}
 
+	FString EditorStr = SaveEditableTextBox->GetText().ToString();
+	bool MakeState;
+	TArray<uint8>mPakByte =  UmPakFileHandle::mPakPackage(allPak, EditorStr, MakeState);
 
-	TArray<uint8>mPakByte =  UmPakFileHandle::mPakMaker(allPak, TEXT(""));
- 	UmPakFileHandle::WriteByte2File(mPakByte, SaveEditableTextBox->GetText().ToString());
 
 
 	return FReply::Handled();

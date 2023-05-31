@@ -37,8 +37,8 @@ void UMount_mPak::Activate()
 	FString ProjectFullSaveDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir());
 
 
-	TArray<uint8> mPakByte = UmPakFileHandle::ReadFile2Byte(mPakPath);
-	UmPakFileHandle::mPakUnpack(mPakByte, ProjectFullSaveDir);
+
+	UmPakFileHandle::mPakUnpackage(ProjectFullSaveDir,mPakPath);
 
 	FString PakPath = "";
 #if WITH_EDITOR
