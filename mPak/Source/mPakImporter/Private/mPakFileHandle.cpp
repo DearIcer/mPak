@@ -120,3 +120,4 @@ TArray<uint8> UmPakFileHandle::mPakMaker(TArray<FString> inFilePtahs, FString ou
 	 */
 	return byteArray;
 }
+
