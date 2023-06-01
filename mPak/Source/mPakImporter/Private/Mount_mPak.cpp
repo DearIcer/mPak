@@ -76,24 +76,34 @@ void UMount_mPak::Activate()
 	FString OldPakMountPoint = pak->GetMountPoint();
 	int32 ContentPos = OldPakMountPoint.Find("Content/");
 
-	FString PIEMountPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + OldPakMountPoint.RightChop(ContentPos));	   //PIE使用绝对路径
- 	FString DebugMountPath = FPaths::ProjectDir() + OldPakMountPoint.RightChop(ContentPos);    //打包后使用相对路径
+	FString PIEMountPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + OldPakMountPoint.RightChop(ContentPos));
+ 	FString DebugMountPath = FPaths::ProjectDir() + OldPakMountPoint.RightChop(ContentPos);
 
+	FString RightPart = "";
 
 #if WITH_EDITOR
-	//GEngine->AddOnScreenDebugMessage(-1, 9.0f, FColor::Yellow, FString::Printf(TEXT("PIEMountPath:%s"), *PIEMountPath));	  //打印输出挂载点
-	MyPakPlatformFile->Mount(*PakPath, 1, *PIEMountPath);		
+	//GEngine->AddOnScreenDebugMessage(-1, 90.0f, FColor::Yellow, FString::Printf(TEXT("PIEMountPath:%s"), *PIEMountPath));	  //打印输出挂载点
+	MyPakPlatformFile->Mount(*PakPath, 1, *PIEMountPath);	
+     	
+	FString ContentDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
+	RightPart = FPaths::GetPath(PIEMountPath.RightChop(ContentDir.Len()));
+	//GEngine->AddOnScreenDebugMessage(-1, 90.0f, FColor::Yellow, FString::Printf(TEXT("PIEMountPath:%s"), *RightPart));	
 
 #else
-	//GEngine->AddOnScreenDebugMessage(-1, 9.0f, FColor::Yellow, FString::Printf(TEXT("DebugMountPath:%s"), *DebugMountPath));	  //打印输出挂载点
+	//GEngine->AddOnScreenDebugMessage(-1, 90.0f, FColor::Yellow, FString::Printf(TEXT("DebugMountPath:%s"), *DebugMountPath));	  //打印输出挂载点
 	MyPakPlatformFile->Mount(*PakPath, 1, *DebugMountPath);
+
+
+	FString ContentDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
+	RightPart = FPaths::GetPath(DebugMountPath.RightChop(ContentDir.Len()));
+	//GEngine->AddOnScreenDebugMessage(-1, 90.0f, FColor::Yellow, FString::Printf(TEXT("DebugMountPath:%s"), *RightPart));	
 
 #endif
 
 	//UWorld* const World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
 
-
-	UClass* spActor = LoadClass<AActor>(AActor::StaticClass(), TEXT("/Script/Engine.Blueprqint'/Game/MakePak/BP_Main.BP_Main_C'"));
+	//UClass* spActor = LoadClass<AActor>(AActor::StaticClass(), TEXT("/Script/Engine.Blueprqint'/Game/%s/BP_Main.BP_Main_C'"),*RightPart);
+	UClass* spActor = LoadClass<AActor>(AActor::StaticClass(), *FString::Printf(TEXT("/Script/Engine.Blueprqint'/Game/%s/BP_Main.BP_Main_C'"), *RightPart));
 
 		
 	if (spActor)
