@@ -1,3 +1,8 @@
 
 *.bak
 .DS_Store
+.vs/
+Binaries/
+Content/StartContent/
+Intermediate/
+Saved/
