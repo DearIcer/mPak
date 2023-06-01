@@ -16,9 +16,10 @@
     </a>
 </p>
 
-# about:
-
-This project provides pak packages and mounting methods, and integrates paks of different platforms and uncooked assets into mpak files, so that the files can be used across platforms and support mounting at different stages, such as development in the editor Stages and release stages after project packaging
+# about logo:
+About the logo, it is a combination of a tire and a propeller. The functions of both the tire and the propeller are to receive power from the engine and propel the machine forward. Therefore, this component can be used for both land transportation and as a propulsion system for yachts. The same applies to the mPak file, which can be used by developers, for project testing, and can also be hot-updated in released projects.
+# about project:
+This project provides methods for packaging, parsing, and mounting mPak files, integrating packages and uncoked assets from different platforms into mPak files, making them cross-platform compatible. It supports mounting at different stages, such as development during the editing phase and release after project packaging.
 
 
 # file structure:
