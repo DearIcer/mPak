@@ -22,9 +22,19 @@ void UMount_mPak::Event_OnFailed(UClass* ActorPtr)
 
 UMount_mPak* UMount_mPak::Mount_mPak(FString mPakPath,  const UObject* WorldContextObject)
 {
+
+	if (!WorldContextObject)
+	{	
+		UMount_mPak* Ins = nullptr;
+		return Ins;
+	}
+
+
 	UMount_mPak* Ins = NewObject<UMount_mPak>();
 	Ins->mPakPath = mPakPath;
 	Ins->WorldContextObject = WorldContextObject;
+
+
 	return Ins;
 }
 
@@ -33,9 +43,9 @@ UMount_mPak* UMount_mPak::Mount_mPak(FString mPakPath,  const UObject* WorldCont
 
 void UMount_mPak::Activate()
 {
+
 	AActor* tempPtr = nullptr;
 	FString ProjectFullSaveDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir());
-
 
 
 	UmPakFileHandle::mPakUnpackage(ProjectFullSaveDir,mPakPath);
@@ -71,11 +81,11 @@ void UMount_mPak::Activate()
 
 
 #if WITH_EDITOR
-	GEngine->AddOnScreenDebugMessage(-1, 9.0f, FColor::Yellow, FString::Printf(TEXT("PIEMountPath:%s"), *PIEMountPath));	  //打印输出挂载点
+	//GEngine->AddOnScreenDebugMessage(-1, 9.0f, FColor::Yellow, FString::Printf(TEXT("PIEMountPath:%s"), *PIEMountPath));	  //打印输出挂载点
 	MyPakPlatformFile->Mount(*PakPath, 1, *PIEMountPath);		
 
 #else
-	GEngine->AddOnScreenDebugMessage(-1, 9.0f, FColor::Yellow, FString::Printf(TEXT("DebugMountPath:%s"), *DebugMountPath));	  //打印输出挂载点
+	//GEngine->AddOnScreenDebugMessage(-1, 9.0f, FColor::Yellow, FString::Printf(TEXT("DebugMountPath:%s"), *DebugMountPath));	  //打印输出挂载点
 	MyPakPlatformFile->Mount(*PakPath, 1, *DebugMountPath);
 
 #endif

@@ -230,26 +230,13 @@ void SMakeFileEd::DoCookPlantformTask(FString Plantform)
 {
 
 
-	//路径有可能存在空格	 所以转义双引号
-   	
-	FString CookWindowsParam;
-	CookWindowsParam += FString::Printf(TEXT(" \"%s\""), *EditorCmdPath);	  //C:/Program Files/Epic Games/UE_5.2/Engine/Binaries/Win64/UnrealEditor-Cmd.exe
-	CookWindowsParam += FString::Printf(TEXT(" \"%s\""), *FullProjectName);		//C:/Users/hotWin/Desktop/dddd/dddd.uproject
-	CookWindowsParam += FString::Printf(TEXT(" \"%s\""), *Plantform);			//Windows
+	FString CookPlantformParam;
+	CookPlantformParam += FString::Printf(TEXT(" \"%s\""), *EditorCmdPath);
+	CookPlantformParam += FString::Printf(TEXT(" \"%s\""), *FullProjectName);
+	CookPlantformParam += FString::Printf(TEXT(" \"%s\""), *Plantform);
 
-	FProcHandle CookWinHandle = FPlatformProcess::CreateProc(*cookBatpath, *CookWindowsParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
-	FPlatformProcess::WaitForProc(CookWinHandle);
-
-
-
-	//Cook 安卓
-	FString CookAndroidParam;
-	CookAndroidParam += FString::Printf(TEXT(" \"%s\""), *EditorCmdPath);
-	CookAndroidParam += FString::Printf(TEXT(" \"%s\""), *FullProjectName);
-	CookAndroidParam += FString::Printf(TEXT(" \"%s\""), TEXT("Android_ASTC"));
-
-	FProcHandle CookAndroidHandle = FPlatformProcess::CreateProc(*cookBatpath, *CookAndroidParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
-	FPlatformProcess::WaitForProc(CookAndroidHandle);
+	FProcHandle CookHandle = FPlatformProcess::CreateProc(*cookBatpath, *CookPlantformParam, false, false, false, nullptr, 0, NULL, nullptr, nullptr);
+	FPlatformProcess::WaitForProc(CookHandle);
 
 
 }

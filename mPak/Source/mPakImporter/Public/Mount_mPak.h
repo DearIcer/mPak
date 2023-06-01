@@ -29,11 +29,8 @@ public:
 
 
 
-
-
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", WorldContext = "WorldContextObject", Category = "Biz API"))
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject", Category = "mPakHandle"), meta = (DisplayName = "Mount_mPak"))
 		static UMount_mPak* Mount_mPak(FString mPakPath,const UObject* WorldContextObject);
-
 
 
 
