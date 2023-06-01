@@ -24,12 +24,14 @@ This project provides pak packages and mounting methods, and integrates paks of 
 # file structure:
 <img src="./img/FileStructure.jpg" width="500px"></img>
 
-# mPakCore Usage:
-- [Pack]	mPakCore a.pak b.pak c.pak -o=outfile.mpak
-- [unPakc]  mPakCore outfile.mpak -o=C:\Users\admin\Desktop\		 
 
 # Make mPak file:
  <img src="./img/makeMPak.png" width="250px"></img>
+
+# Blueprint Usage:
+- [mPakPackage]	Make a mPak file
+- [mPakUnpackage]  Parse a mpak file
+- [Mount_mPak]  Mount the mpak file to the project
 
 
 # mPak importer Usage:
