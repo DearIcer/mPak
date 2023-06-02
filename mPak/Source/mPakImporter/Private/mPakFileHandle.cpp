@@ -95,11 +95,13 @@ TArray<uint8> UmPakFileHandle::mPakPackage(TArray<FString> inFilePtahs, FString 
 
 
 		FString fileName = getFileName(inFilePtahs[i]);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, *fileName);
+	
 
+
+		strcpy_s(fileInfo.fileName, sizeof(fileInfo.fileName), TCHAR_TO_ANSI(*fileName));
+		//strcat(fileInfo.fileName, "\0");
 
 		//sprintf(fileInfo.fileName, "%s",TCHAR_TO_ANSI(*fileName));	//文件名 方法被废弃
-		strcpy_s(fileInfo.fileName, sizeof(fileInfo.fileName), TCHAR_TO_ANSI(*fileName));
 
 		fileInfo.fileSize = getFileSize(inFilePtahs[i]);			//文件大小
 
@@ -130,6 +132,39 @@ TArray<uint8> UmPakFileHandle::mPakPackage(TArray<FString> inFilePtahs, FString 
 	return byteArray;
 }
 
+TArray<FBlueprintFileInfo> UmPakFileHandle::GetmPakFileInfo(FString inFile)
+{
+	TArray<uint8> byteArray = ReadFile2Byte(inFile);
 
+	uint8* bytePtr = byteArray.GetData();
+	// 从TArray<uint8>中读取int32和结构体数组
+	bytePtr = byteArray.GetData();
+	int32 numFiles;
+	FMemory::Memcpy(&numFiles, bytePtr, sizeof(int32));
+	bytePtr += sizeof(int32);
+
+	//读取结构体数组
+	TArray<FileInfo> fileInfos;
+	fileInfos.SetNum(numFiles);
+	for (int i = 0; i < numFiles; i++) {
+		FileInfo fileInfo;
+		FMemory::Memcpy(&fileInfo, bytePtr, sizeof(FileInfo));
+		fileInfos[i] = fileInfo;
+		bytePtr += sizeof(FileInfo);
+	}
+
+	TArray<FBlueprintFileInfo> bpFileInfos;
+	bpFileInfos.SetNum(numFiles);
+	 for (int i=0;i< fileInfos.Num();i++)
+	 {
+
+		 bpFileInfos[i].fileSize = fileInfos[i].fileSize;
+		 //char* aaa = fileInfos[i].fileName;
+ 		 bpFileInfos[i].Plantform = fileInfos[i].fileName;
+	 }
+
+
+	return bpFileInfos;
+}
 
 
