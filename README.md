@@ -33,6 +33,7 @@ This project provides methods for packaging, parsing, and mounting mPak files, i
 - [mPakPackage]	Make a mPak file
 - [mPakUnpackage]  Parse a mpak file
 - [Mount_mPak]  Mount the mpak file to the project
+- [GetmPakFileInfo] Get the mpak file info
 
 
 # mPak importer Usage:
