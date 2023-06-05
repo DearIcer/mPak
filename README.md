@@ -16,6 +16,8 @@
     </a>
 </p>
 
+[中文文档](./README_zh.md)
+
 # about logo:
 About the logo, it is a combination of a tire and a propeller. The functions of both the tire and the propeller are to receive power from the engine and propel the machine forward. Therefore, this component can be used for both land transportation and as a propulsion system for yachts. The same applies to the mPak file, which can be used by developers, for project testing, and can also be hot-updated in released projects.
 # about project:
