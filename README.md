@@ -15,7 +15,7 @@
         <img src="https://img.shields.io/badge/author-hotMonk-blueviolet" alt="Author">
     </a>
 </p>
-[English](./README_en.md)
+[English](README_en.md)
 
 # 关于标志:
 这个标志是轮胎和螺旋桨的组合。轮胎和螺旋桨都能从引擎中接受动力并推动机器向前移动。因此，这个组件既可以用于陆地交通，也可以作为游艇的推进系统。同样适用于mPak文件，它可以被开发者用于项目测试，并且在发布的项目中也可以进行热更新。
