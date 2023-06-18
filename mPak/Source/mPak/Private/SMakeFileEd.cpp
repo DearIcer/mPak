@@ -190,6 +190,14 @@ END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 FReply SMakeFileEd::OnPackButtonClickFun()
 {	
 
+	//清理上次目录
+	FString saveDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir());
+	TArray<FString> LastPak = GetAllPakFilesInDirectory(saveDir);
+ 	for (const FString& FilePath : LastPak)
+	{
+		IFileManager::Get().Delete(*FilePath);
+	}
+
 	if (WindowsEditorCheckBox->IsChecked())
 	{
 		DoPackPlantformTask(TEXT("Editor"));
@@ -207,7 +215,6 @@ FReply SMakeFileEd::OnPackButtonClickFun()
 
 
 	//获取打包后的所有pak文件
-	FString saveDir = FPaths::ConvertRelativePathToFull(FPaths::ProjectSavedDir());
 	TArray<FString> allPak = GetAllPakFilesInDirectory(saveDir);
 
 	for (auto pak:allPak)
