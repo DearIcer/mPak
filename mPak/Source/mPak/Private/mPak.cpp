@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+ï»¿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "mPak.h"
 #include "mPakStyle.h"
@@ -81,7 +81,7 @@ TSharedRef<SDockTab> FmPakModule::OnSpawnPluginTab(const FSpawnTabArgs& SpawnTab
 	return SNew(SDockTab)
 		.TabRole(ETabRole::NomadTab)
 		[
-			SNew(SMakeFileEd)
+			SNew(SMenuPanel)
 		];
 
 
@@ -97,7 +97,7 @@ void FmPakModule::RegisterMenus()
 	// Owner will be used for cleanup in call to UToolMenus::UnregisterOwner
 	FToolMenuOwnerScoped OwnerScoped(this);
 
-	// ²»ÐèÒªÏÔÊ¾ÔÚÁÐ±íÀï
+	// ä¸éœ€è¦æ˜¾ç¤ºåœ¨åˆ—è¡¨é‡Œ
 	//{
 	//	UToolMenu* Menu = UToolMenus::Get()->ExtendMenu("LevelEditor.MainMenu.Window");
 	//	{
