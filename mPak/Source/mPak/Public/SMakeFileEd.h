@@ -20,6 +20,10 @@ public:
 
 
 
+private:
+	TSharedPtr<SWidgetSwitcher> MySwitcher;
+	TSharedPtr<SButton> CutButton;
+	FReply OnCutButtonClickFun();
 
 
 };
