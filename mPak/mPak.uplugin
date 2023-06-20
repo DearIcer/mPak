@@ -1,4 +1,4 @@
-{
+﻿{
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "2.0.1",
@@ -23,6 +23,11 @@
 		{
 			"Name": "mPakImporter",
 			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "Network",
+			"Type": "Editor",
 			"LoadingPhase": "Default"
 		}
 	]

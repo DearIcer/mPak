@@ -39,6 +39,7 @@ void SMenuPanel::Construct(const FArguments& InArgs)
 				.HAlign(HAlign_Center)
 				.VAlign(VAlign_Center)
 				.HeightOverride(20.f)
+				
 				[
 					SAssignNew(CutButton, SButton)
 					.Text(LOCTEXT("Change", "Cut"))
